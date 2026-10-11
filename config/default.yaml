@@ -1,0 +1,81 @@
+# SGMA-MuralNet configuration
+
+# Data
+# Directory containing train/val/test subfolders, each with `images`, `edges`,
+# and `masks` subfolders (or point TRAIN/VAL/TEST_FLIST to .flist text files).
+DATA_ROOT: ./data/DhMurals1714
+
+TRAIN_FLIST:             # leave empty to glob DATA_ROOT/train/images
+VAL_FLIST:
+TEST_FLIST:
+
+TRAIN_EDGE_FLIST:
+VAL_EDGE_FLIST:
+TEST_EDGE_FLIST:
+
+TRAIN_MASK_FLIST:
+VAL_MASK_FLIST:
+TEST_MASK_FLIST:
+
+INPUT_SIZE: 256          # images are resized to INPUT_SIZE x INPUT_SIZE
+MASK_TYPE: external      # external (irregular masks) | random_block | half
+# Line-drawing polarity. MuralNet loads a grayscale line map and inverts it so
+# that line pixels == 1.0. Set to False if your drawings already have line==1.
+LINE_INVERT: true
+
+# Model
+IN_CHANNELS: 4           # [damaged RGB (3) + line drawing (1)] for SRN
+BASE_CHANNELS: 32        # first-layer channel count (stem -> 32)
+BOTTLENECK: 256          # bottleneck feature dimension (T3 / Fout)
+RESIDUAL_BLOCKS: 4       # residual blocks at the SRN bottleneck
+DILATIONS: [1, 3, 5, 7]  # MFA parallel dilated branches
+SE_REDUCTION: 16         # squeeze-and-excitation reduction ratio
+MODULATION_SCALES: [2, 3]  # encoder scales at which structure modulation is applied
+USE_SPECTRAL_NORM: true  # spectral norm in the PatchGAN discriminator
+VARIANT: A3              # A0-A8 ablation variant (Table 10); A3 = full model
+USE_SE: true             # squeeze-and-excitation inside MFA
+
+# Optimization
+SEED: 20260913
+SEEDS: [20260913, 20260914, 20260915]  # training seeds (Table 4)
+DEVICE: cuda             # cuda | cpu
+FP16: false              # FP32 precision
+
+GEN_LR: 0.00001          # 1e-5
+DISC_LR: 0.0001          # 1e-4
+BETA1: 0.9
+BETA2: 0.999
+
+PHASE1_STEPS: 18768      # SRN-only updates
+PHASE2_STEPS: 75072      # full SRN+CCN updates
+PHASE1_BATCH: 32         # effective batch size (micro x accumulation)
+PHASE1_MICRO: 1
+PHASE2_BATCH: 8
+PHASE2_MICRO: 1
+
+# Loss weights
+L1_WEIGHT: 1.0           # lambda_1
+CONTENT_WEIGHT: 0.1      # lambda_c
+STYLE_WEIGHT: 250.0      # lambda_s
+ADV_WEIGHT: 0.1          # lambda_a
+HIST_WEIGHT: 0.0005      # lambda_h (Phase 2 only)
+
+# VGG-19 perceptual feature layers
+CONTENT_LAYERS: [relu1_1, relu2_1, relu3_1, relu4_1, relu5_1]
+STYLE_LAYERS: [relu2_2, relu3_4, relu4_4, relu5_2]
+HIST_LAYERS: [relu4_1, relu4_2, relu4_3, relu4_4]   # histogram-matching layers (Eq. 14)
+VGG_NORMALIZE: true       # ImageNet mean/std normalization before VGG features
+
+# Logging / checkpointing
+OUTPUT_DIR: ./runs/sgma_muralnet
+LOG_INTERVAL: 10
+SAMPLE_INTERVAL: 1000
+EVAL_INTERVAL: 1000       # validation every 1000 steps (best kept by hole MSE)
+SAVE_INTERVAL: 1000
+NUM_WORKERS: 4
+
+# Evaluation protocol
+MASK_BINS: [[10, 20], [20, 30], [30, 40], [40, 50], [50, 60]]  # hole-area % bins
+MASKS_PER_BIN: 5          # fixed irregular masks per bin -> 5 x 5 x 50 = 1250 pairs
+EVAL_SEED: 20260913       # seed for the fixed per-bin masks
+EVAL_SPLIT: test

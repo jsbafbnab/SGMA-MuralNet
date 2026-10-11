@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# data and training artifacts
+data/
+runs/
+*.pt
+*.pth
+*.ckpt
+*.flist
+
+# experiment outputs
+visualizations/

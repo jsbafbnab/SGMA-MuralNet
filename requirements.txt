@@ -1,0 +1,13 @@
+torch>=2.1
+torchvision>=0.16
+numpy
+Pillow
+scipy
+scikit-image
+PyYAML
+tqdm
+thop            # MAC counting
+lpips           # LPIPS metric
+opencv-python-headless  # SIFT cross-partition screening
+# Optional: MediaPipe Face Mesh for the "missing facial features" perturbation.
+# mediapipe

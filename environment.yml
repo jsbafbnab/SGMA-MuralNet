@@ -1,0 +1,20 @@
+name: sgma-muralnet
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pytorch>=2.1
+  - torchvision>=0.16
+  - numpy
+  - pillow
+  - scipy
+  - scikit-image
+  - pyyaml
+  - tqdm
+  - opencv
+  - pip:
+      - thop
+      - lpips
