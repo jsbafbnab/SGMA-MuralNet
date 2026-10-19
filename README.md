@@ -214,11 +214,12 @@ Sensitivity controls (Table 11): `MODULATION_SCALES: [2]` / `[3]`,
 
 ## Pretrained models
 
-The full trained checkpoints will be released after the paper is accepted.
-For training from scratch, checkpoints are saved to `OUTPUT_DIR`; the best
-validation-hole-MSE model is kept as `phase1_best.pt` and `phase2_best.pt`,
-and loaded with `--checkpoint` in the `test.py` / `evaluate` / `visualize`
-commands above.
+The full trained checkpoints are publicly available at Baidu Netdisk:
+Link: https://pan.baidu.com/s/15dvLK5UtgBL1UR6fQ7UBzw?pwd=kf9p
+Code: kf9p
+
+For training from scratch, checkpoints are saved to `OUTPUT_DIR`; the best validation-hole-MSE model is kept as `phase1_best.pt` and `phase2_best.pt`, and loaded with `--checkpoint` in the `test.py` / `evaluate` / `visualize` commands above.
+
 
 ---
 
